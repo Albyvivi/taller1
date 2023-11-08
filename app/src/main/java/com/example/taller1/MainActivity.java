@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     private String operator = "";
     private double num1 = 0;
     private double num2 = 0;
+    private double result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,25 +116,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         brackets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBracketsClick(view);
             }
         });
-
+*/
 
         porciento.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!input.isEmpty()) {
-                        double currentValue = Double.parseDouble(input);
-                        double percentageValue = currentValue / 100;
-                        input = String.valueOf(percentageValue);
-                        display.setText(input);
-                    }
+            @Override
+            public void onClick(View view) {
+                if (!input.isEmpty()) {
+                    double currentValue = Double.parseDouble(input);
+                    double percentageValue = currentValue / 100;
+                    input = String.valueOf(percentageValue);
+                    display.setText(input);
                 }
-                });
+            }
+        });
         divide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void onNumberClick(View view) {
         Button button = (Button) view;
         String clickedNumber = button.getText().toString();
@@ -186,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         num2 = 0;
         display.setText("");
     }
+
     public void onBracketsClick(View view) {
 
         if (input.isEmpty() || isLastCharacterOperator(input) || input.endsWith("(")) {
@@ -198,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         display.setText(input);
     }
+
     private boolean isLastCharacterOperator(String input) {
         String operators = "+-*/";
         if (input.isEmpty()) {
@@ -206,30 +211,32 @@ public class MainActivity extends AppCompatActivity {
         char lastChar = input.charAt(input.length() - 1);
         return operators.contains(String.valueOf(lastChar));
     }
+
     public void onOperatorClick(View view, String selectedOperator) {
-        if (!input.isEmpty()) {
-            if (!operator.isEmpty()) {
-                calculate();
-            }
-            num1 = Double.parseDouble(input);
-            operator = selectedOperator;
-            input = "";
+        if (!input.isEmpty() && !operator.isEmpty()) {
+            num2 = Double.parseDouble(input);
+            calculate();
+            input = String.valueOf(result);
+            display.setText(input);
         }
+        operator = selectedOperator;
+        num1 = Double.parseDouble(input);
+        input = "";
     }
+
     public void onEqualClick(View view) {
         if (!input.isEmpty() && !operator.isEmpty() && !input.endsWith("(")) {
             num2 = Double.parseDouble(input);
-            double result = calculate();
-            input = String.valueOf(result);
-            display.setText(input);
+            calculate();
             operator = "";
             num1 = result;
-            num2 = 0;
+            input = String.valueOf(result);
+            display.setText(input);
         }
     }
 
-    public double calculate() {
-        double result = 0;
+    public void calculate() {
+        result = 0;
         switch (operator) {
             case "+":
                 result = num1 + num2;
@@ -248,7 +255,5 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
-        return result;
     }
-
 }
